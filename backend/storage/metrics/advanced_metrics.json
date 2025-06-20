@@ -1,7 +1,7 @@
 {
   "confusionMatrix": {
     "truePositives": {
-      "cat": 2,
+      "cat": 3,
       "dog": 0
     },
     "falsePositives": {
@@ -10,7 +10,7 @@
     },
     "trueNegatives": {
       "cat": 0,
-      "dog": 2
+      "dog": 3
     },
     "falseNegatives": {
       "cat": 0,
@@ -24,7 +24,7 @@
       "f1Score": 1,
       "specificity": 0,
       "accuracy": 1,
-      "support": 2
+      "support": 3
     },
     "dog": {
       "precision": 0,
@@ -43,13 +43,13 @@
     "weightedAvgRecall": 1,
     "weightedAvgF1Score": 1,
     "accuracy": 1,
-    "totalSamples": 2
+    "totalSamples": 3
   },
   "errorAnalysis": {
     "highConfidenceErrors": [],
     "commonMisclassifications": {},
     "errorPatterns": {}
   },
-  "lastUpdated": "2025-06-20T15:39:49.959Z",
+  "lastUpdated": "2025-06-20T22:06:32.197Z",
   "version": "1.0.0"
 }

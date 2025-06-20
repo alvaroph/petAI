@@ -12,7 +12,9 @@
     "train-real": "node scripts/trainWithRealData.js",
     "train-simple": "node scripts/trainSimple.js",
     "test-predictions": "node scripts/testPredictions.js",
-    "test-endpoints": "node scripts/testEndpoints.js"
+    "test-endpoints": "node scripts/testEndpoints.js",
+    "convert-tflite": "node scripts/convertToTFLite.js",
+    "run-tests": "node scripts/runModelTests.js"
   },
   "keywords": [
     "pets",

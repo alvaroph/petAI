@@ -4,6 +4,7 @@ import CameraCapture from '../components/CameraCapture.vue'
 import ImagePreview from '../components/ImagePreview.vue'
 import MLPredictionResult from '../components/MLPredictionResult.vue'
 import FileUpload from '../components/FileUpload.vue'
+import ModelSelector from '../components/ModelSelector.vue'
 import { useImageUpload } from '../composables/useImageUpload.js'
 import { useMachineLearning } from '../composables/useMachineLearning.js'
 
@@ -13,7 +14,8 @@ export default {
     CameraCapture,
     ImagePreview,
     MLPredictionResult,
-    FileUpload
+    FileUpload,
+    ModelSelector
   },
   setup() {
     // Estados del flujo de captura/análisis
@@ -34,8 +36,15 @@ export default {
     var {
       isProcessing,
       predictImage,
-      resetPrediction
+      resetPrediction,
+      setSelectedModel
     } = useMachineLearning()
+
+    // Manejador para selección de modelo
+    function handleModelSelected(modelType) {
+      setSelectedModel(modelType)
+      console.log(`🔄 Modelo seleccionado: ${modelType}`)
+    }
 
     // Iniciar captura de imagen
     function startCapture() {
@@ -198,7 +207,8 @@ export default {
       handleRetakeImage,
       handleAnalyzeImage,
       goToHome,
-      sendForExpertValidation
+      sendForExpertValidation,
+      handleModelSelected
     }
   }
 }
@@ -225,6 +235,9 @@ export default {
               <strong>Proyecto Educativo:</strong> Aprende sobre machine learning mientras clasificas mascotas
             </div>
           </div>
+
+          <!-- Selector de Modelo -->
+          <ModelSelector @model-selected="handleModelSelected" />
 
           <!-- Opciones de entrada -->
           <div class="row mb-4">

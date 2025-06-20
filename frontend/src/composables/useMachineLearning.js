@@ -1,8 +1,9 @@
 import { ref, computed } from 'vue'
+import { useLocalModels } from './useLocalModels.js'
 
 /**
  * Composable para integración con sistema de Machine Learning
- * Fase 3: Predicciones ML para identificación de rovellones
+ * Incluye modelos backend y locales (TensorFlow Lite style)
  */
 export function useMachineLearning() {
   // Estado reactivo
@@ -10,6 +11,14 @@ export function useMachineLearning() {
   var lastPrediction = ref(null)
   var modelInfo = ref(null)
   var error = ref(null)
+  var selectedModel = ref('backend') // 'backend', 'optimized', 'quantized'
+
+  // Integrar modelos locales
+  const {
+    predictLocal,
+    updatePerformanceStats,
+    anyModelLoaded
+  } = useLocalModels()
 
   // Estados computados
   var hasValidPrediction = computed(function() {
@@ -30,7 +39,16 @@ export function useMachineLearning() {
   })
 
   /**
-   * Envía imagen para predicción ML
+   * Cambia el modelo seleccionado
+   * @param {string} modelType - Tipo de modelo ('backend', 'optimized', 'quantized')
+   */
+  function setSelectedModel(modelType) {
+    selectedModel.value = modelType
+    console.log(`🔄 Modelo cambiado a: ${modelType}`)
+  }
+
+  /**
+   * Envía imagen para predicción ML usando el modelo seleccionado
    * @param {File} imageFile - Archivo de imagen
    * @returns {Object} Resultado de la predicción
    */
@@ -39,6 +57,37 @@ export function useMachineLearning() {
     error.value = null
     lastPrediction.value = null
 
+    try {
+      console.log(`🤖 Iniciando predicción con modelo: ${selectedModel.value}`)
+      
+      var result
+      
+      if (selectedModel.value === 'backend') {
+        result = await predictWithBackend(imageFile)
+      } else {
+        result = await predictWithLocal(imageFile)
+      }
+      
+      lastPrediction.value = result
+      console.log('✅ Predicción completada:', result)
+      
+      return result
+      
+    } catch (err) {
+      console.error('❌ Error en predicción:', err)
+      error.value = err.message
+      throw err
+    } finally {
+      isProcessing.value = false
+    }
+  }
+
+  /**
+   * Predicción usando backend
+   */
+  async function predictWithBackend(imageFile) {
+    const startTime = performance.now()
+    
     try {
       // Crear FormData para envío
       var formData = new FormData()
@@ -67,23 +116,54 @@ export function useMachineLearning() {
         throw new Error(result.message || 'Error en predicción')
       }
 
-      // Guardar resultado
-      lastPrediction.value = result.data
+      // Calcular tiempo de ejecución
+      const executionTime = performance.now() - startTime
+      
+      // Añadir información del modelo y rendimiento
+      result.data.model_info = {
+        type: 'backend',
+        location: 'servidor',
+        execution_time: executionTime
+      }
+      
+      // Actualizar estadísticas de rendimiento
+      updatePerformanceStats('backend', executionTime)
       
       console.log('✅ Predicción ML completada:', {
         clase: result.data.prediction.predictedClass,
         confianza: result.data.prediction.confidence,
-        esDog: result.data.prediction.isDog
+        esDog: result.data.prediction.isDog,
+        tiempo: `${Math.round(executionTime)}ms`
       })
 
       return result.data
 
     } catch (err) {
-      error.value = err.message
-      console.error('❌ Error en predicción ML:', err)
+      console.error('❌ Error en predicción backend:', err)
       throw err
-    } finally {
-      isProcessing.value = false
+    }
+  }
+
+  /**
+   * Predicción usando modelos locales
+   */
+  async function predictWithLocal(imageFile) {
+    try {
+      const modelType = selectedModel.value // 'optimized' o 'quantized'
+      const result = await predictLocal(imageFile, modelType)
+      
+      console.log('✅ Predicción local completada:', {
+        modelo: modelType,
+        clase: result.prediction.class,
+        confianza: result.prediction.confidence,
+        tiempo: `${Math.round(result.model_info.execution_time)}ms`
+      })
+      
+      return result
+      
+    } catch (err) {
+      console.error('❌ Error en predicción local:', err)
+      throw err
     }
   }
 
@@ -182,6 +262,7 @@ export function useMachineLearning() {
     lastPrediction,
     modelInfo,
     error,
+    selectedModel,
     
     // Computadas
     hasValidPrediction,
@@ -194,6 +275,14 @@ export function useMachineLearning() {
     getConfidenceDescription,
     formatConfidence,
     resetPrediction,
-    getPredictionRecommendations
+    getPredictionRecommendations,
+    
+    // Nuevos métodos para modelos múltiples
+    setSelectedModel,
+    predictWithBackend,
+    predictWithLocal,
+    
+    // Integración con modelos locales
+    anyModelLoaded
   }
 }

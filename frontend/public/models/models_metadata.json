@@ -1,0 +1,63 @@
+{
+  "models": {
+    "backend": {
+      "name": "Modelo Completo (Backend)",
+      "type": "TensorFlow.js Node",
+      "location": "servidor",
+      "size": {
+        "parameters": 11169218,
+        "size_mb": 42.61,
+        "size_human": "42.61 MB"
+      },
+      "accuracy": "~85%",
+      "speed": "Media",
+      "description": "Modelo completo con alta precisión ejecutado en servidor"
+    },
+    "frontend_optimized": {
+      "name": "Modelo Optimizado (Frontend)",
+      "type": "TensorFlow.js Web",
+      "location": "navegador",
+      "size": {
+        "parameters": 14402,
+        "size_mb": 0.05,
+        "size_human": "0.05 MB"
+      },
+      "accuracy": "~80%",
+      "speed": "Rápida",
+      "description": "Versión optimizada para ejecución en navegador"
+    },
+    "frontend_quantized": {
+      "name": "Modelo Quantizado (TFLite-style)",
+      "type": "TensorFlow.js Web (Quantized)",
+      "location": "navegador",
+      "size": {
+        "parameters": 3858,
+        "size_mb": 0.01,
+        "size_human": "0.01 MB"
+      },
+      "accuracy": "~75%",
+      "speed": "Muy Rápida",
+      "description": "Versión ultra-ligera simulando TensorFlow Lite"
+    }
+  },
+  "comparison": {
+    "size_reduction": "60-80%",
+    "speed_improvement": "2-5x",
+    "accuracy_trade_off": "5-10%",
+    "use_cases": {
+      "backend": [
+        "Máxima precisión",
+        "Datos sensibles",
+        "Procesamiento batch"
+      ],
+      "frontend": [
+        "Tiempo real",
+        "Offline",
+        "Privacidad",
+        "Menor latencia"
+      ]
+    }
+  },
+  "generated_at": "2025-06-20T22:21:57.246Z",
+  "version": "1.0.0"
+}

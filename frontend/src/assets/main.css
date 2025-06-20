@@ -1,0 +1,162 @@
+@import './base.css';
+
+/* Modern Global Styles */
+#app {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+  font-weight: normal;
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+/* Link Styles */
+a {
+  text-decoration: none;
+  color: var(--primary);
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+a:hover {
+  color: var(--primary-hover);
+  text-decoration: none;
+}
+
+/* Button Enhancements */
+.btn {
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+  border: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--blue-800) 100%);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-hover) 100%);
+  border: none;
+}
+
+.btn-outline-primary {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+/* Card Enhancements */
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  background: var(--bg-primary);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  border-radius: 12px 12px 0 0 !important;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Alert Enhancements */
+.alert {
+  border-radius: 8px;
+  border: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.alert-info {
+  background: var(--primary-light);
+  color: var(--primary-hover);
+  border-left: 4px solid var(--primary);
+}
+
+/* Text Colors */
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Icon Enhancements */
+.bi {
+  transition: all 0.2s ease;
+}
+
+/* Container Enhancements */
+.container {
+  padding: 2rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 2rem;
+  }
+}
+
+/* Progress Bar */
+.progress {
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+}
+
+.progress-bar {
+  border-radius: 8px;
+}
+
+/* Spinner */
+.spinner-border {
+  border-color: var(--primary-light);
+  border-right-color: var(--primary);
+}
+
+/* Form Controls */
+.form-control {
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}

@@ -1,0 +1,47 @@
+{
+  "totalValidations": 3,
+  "correctPredictions": 2,
+  "incorrectPredictions": 1,
+  "accuracyRate": 66.66666666666666,
+  "classMetrics": {
+    "dog": {
+      "totalPredictions": 1,
+      "correctPredictions": 0,
+      "incorrectPredictions": 1,
+      "accuracy": 0
+    },
+    "cat": {
+      "totalPredictions": 2,
+      "correctPredictions": 2,
+      "incorrectPredictions": 0,
+      "accuracy": 100
+    }
+  },
+  "confidenceLevelMetrics": {
+    "alta": {
+      "total": 0,
+      "correct": 0,
+      "accuracy": 0
+    },
+    "media": {
+      "total": 0,
+      "correct": 0,
+      "accuracy": 0
+    },
+    "baja": {
+      "total": 3,
+      "correct": 2,
+      "accuracy": 66.66666666666666
+    }
+  },
+  "dailyStats": {
+    "2025-06-20": {
+      "validations": 3,
+      "correct": 2,
+      "incorrect": 1,
+      "accuracy": 66.66666666666666
+    }
+  },
+  "lastUpdated": "2025-06-20T15:39:49.958Z",
+  "version": "1.0.0"
+}

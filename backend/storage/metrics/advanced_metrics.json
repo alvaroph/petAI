@@ -1,0 +1,55 @@
+{
+  "confusionMatrix": {
+    "truePositives": {
+      "cat": 2,
+      "dog": 0
+    },
+    "falsePositives": {
+      "cat": 0,
+      "dog": 0
+    },
+    "trueNegatives": {
+      "cat": 0,
+      "dog": 2
+    },
+    "falseNegatives": {
+      "cat": 0,
+      "dog": 0
+    }
+  },
+  "classMetrics": {
+    "cat": {
+      "precision": 1,
+      "recall": 1,
+      "f1Score": 1,
+      "specificity": 0,
+      "accuracy": 1,
+      "support": 2
+    },
+    "dog": {
+      "precision": 0,
+      "recall": 0,
+      "f1Score": 0,
+      "specificity": 1,
+      "accuracy": 1,
+      "support": 0
+    }
+  },
+  "overallMetrics": {
+    "macroAvgPrecision": 0.5,
+    "macroAvgRecall": 0.5,
+    "macroAvgF1Score": 0.5,
+    "weightedAvgPrecision": 1,
+    "weightedAvgRecall": 1,
+    "weightedAvgF1Score": 1,
+    "accuracy": 1,
+    "totalSamples": 2
+  },
+  "errorAnalysis": {
+    "highConfidenceErrors": [],
+    "commonMisclassifications": {},
+    "errorPatterns": {}
+  },
+  "lastUpdated": "2025-06-20T15:39:49.959Z",
+  "version": "1.0.0"
+}

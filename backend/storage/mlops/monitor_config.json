@@ -1,0 +1,25 @@
+{
+  "retrainingTriggers": {
+    "minValidationsRequired": 20,
+    "minAccuracyDrop": 5,
+    "maxDaysSinceLastTraining": 7,
+    "minValidationsPerClass": 5,
+    "confidenceLevelThreshold": 60
+  },
+  "modelVersioning": {
+    "maxStoredVersions": 5,
+    "autoBackup": true,
+    "testingPeriod": 24,
+    "rollbackThreshold": 3
+  },
+  "monitoring": {
+    "checkIntervalMinutes": 30,
+    "alertThresholds": {
+      "accuracyDrop": 10,
+      "lowConfidenceRate": 30,
+      "validationBacklog": 50
+    }
+  },
+  "lastUpdated": "2025-06-20T15:30:18.829Z",
+  "version": "1.0.0"
+}

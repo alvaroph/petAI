@@ -1,18 +1,18 @@
 {
-  "totalValidations": 4,
-  "correctPredictions": 3,
-  "incorrectPredictions": 1,
+  "totalValidations": 8,
+  "correctPredictions": 6,
+  "incorrectPredictions": 2,
   "accuracyRate": 75,
   "classMetrics": {
     "dog": {
-      "totalPredictions": 1,
-      "correctPredictions": 0,
-      "incorrectPredictions": 1,
-      "accuracy": 0
+      "totalPredictions": 4,
+      "correctPredictions": 2,
+      "incorrectPredictions": 2,
+      "accuracy": 50
     },
     "cat": {
-      "totalPredictions": 3,
-      "correctPredictions": 3,
+      "totalPredictions": 4,
+      "correctPredictions": 4,
       "incorrectPredictions": 0,
       "accuracy": 100
     }
@@ -24,24 +24,30 @@
       "accuracy": 0
     },
     "media": {
-      "total": 1,
-      "correct": 1,
+      "total": 3,
+      "correct": 3,
       "accuracy": 100
     },
     "baja": {
-      "total": 3,
-      "correct": 2,
-      "accuracy": 66.66666666666666
+      "total": 5,
+      "correct": 3,
+      "accuracy": 60
     }
   },
   "dailyStats": {
     "2025-06-20": {
-      "validations": 4,
-      "correct": 3,
+      "validations": 5,
+      "correct": 4,
       "incorrect": 1,
-      "accuracy": 75
+      "accuracy": 80
+    },
+    "2025-06-21": {
+      "validations": 3,
+      "correct": 2,
+      "incorrect": 1,
+      "accuracy": 66.66666666666666
     }
   },
-  "lastUpdated": "2025-06-20T22:06:32.195Z",
+  "lastUpdated": "2025-06-21T06:42:57.788Z",
   "version": "1.0.0"
 }

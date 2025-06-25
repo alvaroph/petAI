@@ -2,7 +2,7 @@
 
 ## Descripción del Proyecto
 
-PetAI es una aplicación web educativa que utiliza inteligencia artificial para clasificar mascotas, específicamente perros y gatos. El proyecto está diseñado como herramienta educativa para estudiantes de informática e ingeniería que aprenden machine learning, computer vision, MLOps y desarrollo web moderno. Incluye un dashboard completo de MLOps con A/B testing, deployment automatizado y métricas avanzadas.
+PetAI es una aplicación web educativa que utiliza inteligencia artificial para clasificar mascotas, específicamente perros y gatos. El proyecto está diseñado como herramienta educativa para estudiantes de informática e ingeniería que aprenden machine learning, computer vision, MLOps y desarrollo web moderno. Incluye un dashboard completo de MLOps con A/B testing, deployment automatizado, métricas avanzadas y **sistema dual de modelos (servidor vs. local TensorFlow Lite)**.
 
 ## Estado del Proyecto - FASE 6 COMPLETADA ✅
 
@@ -66,6 +66,9 @@ PetAI es una aplicación web educativa que utiliza inteligencia artificial para 
 - **Suite de Tests Automatizados** - Calidad del modelo con 10+ tests específicos
 - **Gestión de Reentrenamiento** - Control completo del scheduler y triggers
 - **Métricas en Tiempo Real** - Dashboard con auto-refresh y métricas avanzadas
+- **Sistema Dual de Modelos** - Selector entre Backend (servidor) vs Local (TensorFlow Lite)
+- **Optimización Edge Computing** - Modelos optimizados y quantizados para inferencia local
+- **Interfaz Modernizada 2025** - Header actualizado con diseño moderno y Bootstrap Icons
 - **Codificación UTF-8** - Corrección completa de problemas de caracteres
 
 ### 🔄 Próximas Fases:
@@ -168,6 +171,10 @@ petai/
 cd backend
 npm install
 npm run dev    # Servidor en puerto 3001
+
+# Comandos adicionales:
+npm run convert-tflite  # Generar modelos optimizados para frontend
+npm run run-tests       # Ejecutar tests de calidad del modelo
 ```
 
 ### Frontend:
@@ -287,6 +294,45 @@ storage/
     ├── daily/                # Respaldos diarios
     └── pre-deployment/       # Respaldos pre-deployment
 ```
+
+## 🤖 Sistema Dual de Modelos (Nuevo en 2025)
+
+El proyecto implementa un **sistema educativo único** que permite comparar diferentes estrategias de deployment de modelos ML:
+
+### **📊 Opciones de Inferencia:**
+
+#### 🌐 **Modelo Backend (Servidor)**
+- **Ubicación**: Ejecutado en servidor Node.js
+- **Tamaño**: 42.61 MB (11M parámetros)
+- **Precisión**: ~85% (máxima disponible)
+- **Velocidad**: Media (requiere red)
+- **Casos de uso**: Máxima precisión, datos sensibles, procesamiento batch
+
+#### 💻 **Modelo Optimizado (Local)**
+- **Ubicación**: TensorFlow.js en navegador
+- **Tamaño**: 0.05 MB (14K parámetros)
+- **Precisión**: ~80% (optimizado)
+- **Velocidad**: Rápida (sin latencia de red)
+- **Casos de uso**: Tiempo real, privacidad, conexiones limitadas
+
+#### 📱 **Modelo Quantizado (TFLite-style)**
+- **Ubicación**: TensorFlow.js quantizado
+- **Tamaño**: 0.01 MB (4K parámetros)
+- **Precisión**: ~75% (ultra-ligero)
+- **Velocidad**: Muy rápida (ideal móviles)
+- **Casos de uso**: Edge computing, IoT, dispositivos con recursos limitados
+
+### **🎯 Valor Educativo:**
+- **Comparación en tiempo real** de rendimiento entre modelos
+- **Trade-offs** entre tamaño, velocidad y precisión
+- **Estrategias de deployment** para diferentes escenarios
+- **Edge computing vs cloud computing** en ML production
+
+### **🛠️ Uso del Selector:**
+1. **Selecciona el tipo de modelo** en la interfaz principal
+2. **Captura o sube una imagen** de mascota
+3. **Compara resultados** y tiempos de ejecución
+4. **Analiza métricas** de rendimiento en tiempo real
 
 ## Dashboard MLOps
 

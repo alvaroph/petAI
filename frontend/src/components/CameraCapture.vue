@@ -32,32 +32,60 @@ export default {
     var hasMultipleCameras = ref(false)
     
     // Inicializar cámara
-    function initCamera() {
-      if (!isSupported.value) {
-        console.error('Cámara no soportada')
-        return
-      }
-      
-      requestPermission()
-        .then(function(mediaStream) {
-          // Asignar stream al elemento video
-          if (videoRef.value) {
-            videoRef.value.srcObject = mediaStream
-            showVideo.value = true
+    async function initCamera() {
+      try {
+        console.log('🔄 Inicializando cámara...')
+        
+        if (!isSupported.value) {
+          throw new Error('Cámara no soportada en este navegador')
+        }
+        
+        const mediaStream = await requestPermission()
+        console.log('✅ Permisos obtenidos, stream:', mediaStream)
+        
+        // Asignar stream al elemento video
+        if (videoRef.value && mediaStream) {
+          console.log('🎥 Asignando stream al video element:', videoRef.value)
+          videoRef.value.srcObject = mediaStream
+          showVideo.value = true
+          console.log('✅ Video stream asignado, showVideo:', showVideo.value)
+          
+          // Esperar a que el video esté listo y forzar reproducción
+          videoRef.value.onloadedmetadata = () => {
+            console.log('📱 Video metadata loaded, starting playback')
+            videoRef.value.play().then(() => {
+              console.log('▶️ Video playback started successfully')
+            }).catch((playError) => {
+              console.error('❌ Video play error:', playError)
+            })
           }
           
-          // Obtener información de cámaras disponibles
-          return getAvailableCameras()
-        })
-        .then(function(cameras) {
+          // También intentar reproducir inmediatamente
+          videoRef.value.play().catch((err) => {
+            console.warn('⚠️ Immediate play failed (normal):', err.message)
+          })
+        } else {
+          console.error('❌ No videoRef or mediaStream:', { videoRef: !!videoRef.value, mediaStream: !!mediaStream })
+        }
+        
+        // Obtener información de cámaras disponibles
+        try {
+          const cameras = await getAvailableCameras()
           availableCameras.value = cameras
           hasMultipleCameras.value = cameras.length > 1
-          console.log('Cámaras disponibles:', cameras.length)
+          console.log('🎥 Cámaras disponibles:', cameras.length)
+        } catch (err) {
+          console.warn('⚠️ No se pudieron obtener cámaras disponibles:', err)
+        }
+        
+      } catch (err) {
+        console.error('❌ Error inicializando cámara:', err)
+        error.value = err
+        emit('capture-error', {
+          code: err.code || 'CAMERA_INIT_ERROR',
+          message: err.message || 'Error inicializando cámara'
         })
-        .catch(function(err) {
-          console.error('Error inicializando cámara:', err)
-          emit('capture-error', err)
-        })
+      }
     }
     
     // Capturar imagen
@@ -132,9 +160,14 @@ export default {
     
     // Lifecycle hooks
     onMounted(function() {
+      console.log('🔄 CameraCapture mounted, videoRef:', videoRef.value)
       // Auto-inicializar si está soportado
       if (isSupported.value) {
-        initCamera()
+        // Pequeño delay para asegurar que el DOM esté completamente renderizado
+        setTimeout(() => {
+          console.log('⏰ Delayed init, videoRef now:', videoRef.value)
+          initCamera()
+        }, 100)
       }
     })
     
@@ -170,6 +203,11 @@ export default {
 
 <template>
   <div class="camera-capture">
+    <!-- Debug info -->
+    <div class="debug-info mb-2" style="font-size: 0.8rem; color: #666;">
+      Debug: isSupported={{isSupported}}, isLoading={{isLoading}}, error={{!!error}}, showVideo={{showVideo}}, isStreamActive={{isStreamActive}}
+    </div>
+    
     <!-- Estado: Cámara no soportada -->
     <div v-if="!isSupported" class="alert alert-danger">
       <i class="bi bi-exclamation-triangle-fill me-2"></i>
@@ -200,23 +238,13 @@ export default {
       </button>
     </div>
     
-    <!-- Estado: Cámara no iniciada -->
-    <div v-else-if="!isStreamActive && !showVideo" class="text-center py-5">
-      <div class="mb-4">
-        <i class="bi bi-camera text-success" style="font-size: 4rem;"></i>
+    <!-- Estado: Cámara activa - SIMPLIFICADO -->
+    <div v-else-if="showVideo" class="camera-active">
+      <!-- Debug info para video -->
+      <div class="debug-info mb-2" style="font-size: 0.8rem; color: #666;">
+        Video Debug: hasVideoRef={{!!videoRef}}, videoSrcObject={{!!(videoRef && videoRef.srcObject)}}
       </div>
-      <h5 class="mb-3">Iniciar Cámara</h5>
-      <p class="text-muted mb-4">
-        Toma una foto clara de la mascota que quieres identificar
-      </p>
-      <button @click="initCamera" class="btn btn-success btn-lg">
-        <i class="bi bi-camera-fill me-2"></i>
-        Abrir Cámara
-      </button>
-    </div>
-    
-    <!-- Estado: Cámara activa -->
-    <div v-else-if="showVideo && isStreamActive" class="camera-active">
+      
       <!-- Video feed -->
       <div class="video-container position-relative">
         <video
@@ -224,7 +252,10 @@ export default {
           autoplay
           playsinline
           muted
+          webkit-playsinline
+          controls="false"
           class="video-feed"
+          style="background-color: #000; min-height: 200px;"
         ></video>
         
         <!-- Overlay con guías -->

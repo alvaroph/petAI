@@ -141,7 +141,8 @@ export default {
           code: 'ML_ANALYSIS_FAILED'
         }
 
-        currentStep.value = 'intro'
+        // En lugar de ir directamente a intro, mantener en preview para poder reintentar
+        currentStep.value = 'preview'
       }
     }
 
@@ -219,6 +220,9 @@ export default {
     <div class="row justify-content-center">
       <div class="col-lg-8">
 
+        <!-- Selector de Modelo - Siempre visible -->
+        <ModelSelector @model-selected="handleModelSelected" />
+
         <!-- ESTADO: Introducción -->
         <div v-if="currentStep === 'intro'">
           <!-- Hero Section -->
@@ -235,9 +239,6 @@ export default {
               <strong>Proyecto Educativo:</strong> Aprende sobre machine learning mientras clasificas mascotas
             </div>
           </div>
-
-          <!-- Selector de Modelo -->
-          <ModelSelector @model-selected="handleModelSelected" />
 
           <!-- Opciones de entrada -->
           <div class="row mb-4">

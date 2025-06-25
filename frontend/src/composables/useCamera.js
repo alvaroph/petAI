@@ -1,9 +1,18 @@
 import { ref, reactive } from 'vue'
 
+// Verificar soporte del navegador
+function checkSupport() {
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    return true
+  } else {
+    return false
+  }
+}
+
 // Composable para manejo de cámara con JavaScript ES5 compatible
 export function useCamera() {
   // Estados reactivos
-  var isSupported = ref(false)
+  var isSupported = ref(checkSupport())
   var isPermissionGranted = ref(false)
   var isStreamActive = ref(false)
   var isLoading = ref(false)
@@ -20,26 +29,16 @@ export function useCamera() {
     audio: false
   })
   
-  // Verificar soporte del navegador
-  function checkSupport() {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      isSupported.value = true
-      return true
-    } else {
-      isSupported.value = false
-      error.value = {
-        code: 'NOT_SUPPORTED',
-        message: 'Tu navegador no soporta acceso a cámara. Usa un navegador moderno como Chrome, Firefox o Safari.'
-      }
-      return false
-    }
-  }
-  
   // Solicitar permisos de cámara
   function requestPermission() {
     return new Promise(function(resolve, reject) {
-      if (!checkSupport()) {
-        reject(error.value)
+      if (!isSupported.value) {
+        const errorInfo = {
+          code: 'NOT_SUPPORTED',
+          message: 'Tu navegador no soporta acceso a cámara. Usa un navegador moderno como Chrome, Firefox o Safari.'
+        }
+        error.value = errorInfo
+        reject(errorInfo)
         return
       }
       
@@ -53,7 +52,7 @@ export function useCamera() {
           stream.value = mediaStream
           isLoading.value = false
           
-          console.log('Permisos de cámara concedidos')
+          console.log('✅ Permisos de cámara concedidos')
           resolve(mediaStream)
         })
         .catch(function(err) {

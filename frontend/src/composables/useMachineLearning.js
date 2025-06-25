@@ -60,12 +60,28 @@ export function useMachineLearning() {
     try {
       console.log(`🤖 Iniciando predicción con modelo: ${selectedModel.value}`)
       
+      if (!imageFile) {
+        throw new Error('No se proporcionó una imagen para analizar')
+      }
+      
       var result
       
       if (selectedModel.value === 'backend') {
+        console.log('📡 Usando modelo backend...')
         result = await predictWithBackend(imageFile)
       } else {
+        console.log(`💻 Usando modelo local: ${selectedModel.value}`)
+        
+        // Verificar que el modelo local esté disponible
+        if (!anyModelLoaded.value) {
+          throw new Error(`Modelo local ${selectedModel.value} no está cargado. Por favor, usa el modelo backend.`)
+        }
+        
         result = await predictWithLocal(imageFile)
+      }
+      
+      if (!result || !result.prediction) {
+        throw new Error('El modelo no devolvió un resultado válido')
       }
       
       lastPrediction.value = result
@@ -75,8 +91,15 @@ export function useMachineLearning() {
       
     } catch (err) {
       console.error('❌ Error en predicción:', err)
-      error.value = err.message
-      throw err
+      const errorMessage = err.message || 'Error desconocido en la predicción'
+      error.value = errorMessage
+      
+      // Si el error es de modelo local, sugerir usar backend
+      if (selectedModel.value !== 'backend' && errorMessage.includes('no está cargado')) {
+        console.log('🔄 Sugiriendo fallback a modelo backend...')
+      }
+      
+      throw new Error(errorMessage)
     } finally {
       isProcessing.value = false
     }
@@ -152,19 +175,45 @@ export function useMachineLearning() {
       const modelType = selectedModel.value // 'optimized' o 'quantized'
       const result = await predictLocal(imageFile, modelType)
       
+      // Convertir formato local al formato esperado por el frontend
+      const standardizedResult = {
+        prediction: {
+          predictedClass: result.prediction.class,
+          confidence: result.prediction.confidence,
+          isDog: result.prediction.class === 'dog',
+          confidenceLevel: getConfidenceLevelFromValue(result.prediction.confidence),
+          probabilities: result.prediction.probabilities || {
+            dog: result.prediction.class === 'dog' ? result.prediction.confidence : 1 - result.prediction.confidence,
+            cat: result.prediction.class === 'cat' ? result.prediction.confidence : 1 - result.prediction.confidence
+          }
+        },
+        model_info: result.model_info,
+        metadata: result.metadata
+      }
+      
       console.log('✅ Predicción local completada:', {
         modelo: modelType,
-        clase: result.prediction.class,
-        confianza: result.prediction.confidence,
+        clase: standardizedResult.prediction.predictedClass,
+        confianza: standardizedResult.prediction.confidence,
+        esDog: standardizedResult.prediction.isDog,
         tiempo: `${Math.round(result.model_info.execution_time)}ms`
       })
       
-      return result
+      return standardizedResult
       
     } catch (err) {
       console.error('❌ Error en predicción local:', err)
       throw err
     }
+  }
+
+  /**
+   * Convierte valor de confianza a nivel
+   */
+  function getConfidenceLevelFromValue(confidence) {
+    if (confidence >= 0.8) return 'alta'
+    if (confidence >= 0.6) return 'media'
+    return 'baja'
   }
 
   /**
@@ -281,6 +330,7 @@ export function useMachineLearning() {
     setSelectedModel,
     predictWithBackend,
     predictWithLocal,
+    getConfidenceLevelFromValue,
     
     // Integración con modelos locales
     anyModelLoaded

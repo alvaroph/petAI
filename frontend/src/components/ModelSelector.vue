@@ -2,15 +2,32 @@
   <div class="model-selector">
     <!-- Header del selector -->
     <div class="selector-header">
-      <h5 class="mb-0">
-        <i class="bi bi-cpu me-2"></i>
-        Modo de Inferencia
-      </h5>
-      <small class="text-muted">Elige dónde ejecutar el modelo de IA</small>
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="mb-0">
+            <i class="bi bi-cpu me-2"></i>
+            Modo de Inferencia
+          </h5>
+          <small class="text-muted">Elige dónde ejecutar el modelo de IA</small>
+        </div>
+        <div class="current-selection">
+          <span class="badge bg-primary fs-6 me-2">
+            <i :class="getModelIcon(selectedModel)" class="me-1"></i>
+            {{ availableModels.find(m => m.id === selectedModel)?.name || 'Servidor' }}
+          </span>
+          <button 
+            @click="isCollapsed = !isCollapsed" 
+            class="btn btn-sm btn-outline-secondary"
+            :title="isCollapsed ? 'Mostrar opciones' : 'Ocultar opciones'"
+          >
+            <i :class="isCollapsed ? 'bi bi-chevron-down' : 'bi bi-chevron-up'"></i>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Opciones de modelo -->
-    <div class="model-options">
+    <div v-show="!isCollapsed" class="model-options">
       <div 
         v-for="model in availableModels" 
         :key="model.id"
@@ -167,6 +184,7 @@ export default {
     const showComparison = ref(false)
     const showPerformance = ref(false)
     const selectedModel = ref('backend') // Por defecto backend
+    const isCollapsed = ref(false) // Para colapsar el selector
 
     // Usar composable de modelos locales
     const {
@@ -187,8 +205,22 @@ export default {
      * Selecciona un modelo
      */
     function selectModel(modelId) {
+      const models = getAvailableModels()
+      const targetModel = models.find(m => m.id === modelId)
+      
+      // Verificar que el modelo esté disponible
+      if (!targetModel || !targetModel.available) {
+        console.warn(`⚠️ Modelo ${modelId} no disponible, usando backend como fallback`)
+        modelId = 'backend'
+      }
+      
       selectedModel.value = modelId
       emit('model-selected', modelId)
+      
+      console.log(`✅ Modelo seleccionado: ${modelId}`)
+      
+      // Colapsar después de selección para ahorrar espacio
+      isCollapsed.value = true
       
       // Mostrar estadísticas de rendimiento después de primera predicción
       showPerformance.value = true
@@ -236,6 +268,7 @@ export default {
       selectedModel,
       showComparison,
       showPerformance,
+      isCollapsed,
       isLoadingLocal,
       localError,
       
